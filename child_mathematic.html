@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Математика для детей</title>
+</head>
+<body>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        text-transform: uppercase;
+        color: #070040;
+        font-size: 20px;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        max-height: 500px;
+        flex-wrap: wrap;
+        margin: 10px auto;
+        width: 100%;
+        max-width: 1000px;
+        padding: 10px;
+        overflow: auto;
+        border: 1px solid;
+    }
+
+    li {
+        margin-right: 15px;
+        display: flex;
+    }
+
+    .options {
+        max-width: 1000px;
+        margin: 0 auto 20px;
+    }
+
+    .btn-wrap {
+        margin-top: 20px;
+    }
+    
+    .ok {
+        background: #168d45;
+        padding: 10px;
+        border-color: #53d0ac;
+        text-transform: uppercase;
+        color: #FFF;
+        font-size: 17px;
+        font-weight: 700;
+    }
+    
+    .clear {
+        background: #ff2507;
+        padding: 10px;
+        border-color: #ff76a1;
+        text-transform: uppercase;
+        color: #000;
+        font-size: 17px;
+        font-weight: 700;
+    }
+</style>
+
+<div id="app">
+    <div class="options">
+        <h1>Генератор простых примеров для основных арифметических операций</h1>
+
+        <form>
+            <label style="font-size: 20px; font-weight: 700; color: brown;" for="basic">Минимальное число в примере (от 0
+                до 100):</label><br>
+            <input id="min" name="min" type="range" min="0" max="100" v-model="minNum">
+            <input id="minNum" name="minNum" type="number" v-model="minNum">
+            <br>
+            <label style="font-size: 20px; font-weight: 700; color: brown;" for="basic">Максимальное число в примере (от 5
+                до 500):</label><br>
+            <input id="basic" name="basic" type="range" min="5" max="500" v-model="basisNumber">
+            <input id="basicNum" name="basic" type="number" v-model="basisNumber">
+            <br>
+            <label style="font-size: 20px; font-weight: 700; color: brown;" for="quantity">Количество примеров (от 1 до
+                500):</label><br>
+            <input id="quantity" name="quantity" type="range" min="1" max="500" v-model="quantity">
+            <input id="quantityNum" name="quantity" type="number" v-model="quantity">
+            <br>
+            <div class="sign-wrap">
+                Знак:<br>
+                <span><input name="sign" value="random" v-model="sign" id="random" type="radio" checked>Рандом (+/-)</span>
+                <span><input name="sign" value="subtraction" v-model="sign" id="subtraction" type="radio">Вычитание</span>
+                <span><input name="sign" value="addition" v-model="sign" id="addition" type="radio">Сложение</span>
+                <span><input name="sign" value="division" v-model="sign" id="division" type="radio">Деление</span>
+                <span><input name="sign" value="multiplication" v-model="sign" id="multiplication" type="radio">Умножение</span>
+            </div>
+            <div class="btn-wrap">
+                <button class="ok" @click.prevent="genetate">Сгенерировать</button>
+                <button class="clear" @click.prevent=" list = [] ">Очистить</button>
+            </div>
+        </form>
+
+    </div>
+    <ul>
+        <li v-for="item in list"
+            style="list-style: none"
+        >{{item}}___
+        </li>
+    </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                basisNumber: 10,
+                minNum: 0,
+                quantity: 100,
+                list: [],
+                sign: "random"
+            }
+        },
+        methods: {
+            genetate: function () {
+                let x, y, sign, example, maxNum;
+                maxNum = +this.basisNumber+1
+                for (let i = 0; i < this.quantity; i++) {
+                    let
+                    x = Math.floor(Math.random() * maxNum);
+                    y = Math.floor(Math.random() * maxNum);
+                    x = x < this.minNum ? +this.minNum+Number(Math.floor(Math.random()*(maxNum-this.minNum))) : x;
+                    y = y < this.minNum ? +this.minNum+Number(Math.floor(Math.random()*(maxNum-this.minNum))) : y;
+
+                    switch(this.sign) {
+                        case 'addition':
+                            sign = "+";
+                            break
+                        case 'subtraction':
+                            sign = "-";
+                            break
+                        case 'division':
+                            sign = "÷";
+                            break
+                        case 'multiplication':
+                            sign = "x";
+                            break
+                        default:
+                            sign = Math.random() < .5 ? "-" : "+";
+                            break
+                    }
+
+                    if (x < y && sign === "-") {
+                        example = y + " " + sign + " " + x + " = ";
+                    } else {
+                        example = x + " " + sign + " " + y + " = ";
+                    }
+                    this.list.push(example);
+                }
+                console.log(this.list);
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

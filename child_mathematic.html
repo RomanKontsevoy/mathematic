@@ -47,7 +47,7 @@
     .btn-wrap {
         margin-top: 20px;
     }
-    
+
     .ok {
         background: #168d45;
         padding: 10px;
@@ -57,7 +57,7 @@
         font-size: 17px;
         font-weight: 700;
     }
-    
+
     .clear {
         background: #ff2507;
         padding: 10px;
@@ -97,6 +97,11 @@
                 <span><input name="sign" value="division" v-model="sign" id="division" type="radio">Деление</span>
                 <span><input name="sign" value="multiplication" v-model="sign" id="multiplication" type="radio">Умножение</span>
             </div>
+            <div class="division-wrap" v-show="sign === 'division'">
+                <label style="font-size: 20px; font-weight: 700; color: brown;" for="divider">Размер делителя:</label><br>
+                <input id="divider" name="divider" type="range" min="1" max="50" v-model="divider">
+                <input id="dividerNum" name="divider" type="number" v-model="divider">
+            </div>
             <div class="btn-wrap">
                 <button class="ok" @click.prevent="genetate">Сгенерировать</button>
                 <button class="clear" @click.prevent=" list = [] ">Очистить</button>
@@ -123,33 +128,37 @@
                 minNum: 0,
                 quantity: 100,
                 list: [],
-                sign: "random"
+                sign: "random",
+                divider: 10
             }
         },
         methods: {
             genetate: function () {
-                let x, y, sign, example, maxNum;
-                maxNum = +this.basisNumber+1
+                let x, y, sign, example, maxNum, divider;
+                maxNum = +this.basisNumber+1;
+                divider = +this.divider+1;
+                console.log("divider:", divider);
                 for (let i = 0; i < this.quantity; i++) {
                     let
-                    x = Math.floor(Math.random() * maxNum);
-                    y = Math.floor(Math.random() * maxNum);
+                        x = Math.floor(Math.random() * maxNum);
+                    y = Math.floor(Math.random() * (this.sign==="division" ? divider : maxNum));
+                    console.log(y);
                     x = x < this.minNum ? +this.minNum+Number(Math.floor(Math.random()*(maxNum-this.minNum))) : x;
                     y = y < this.minNum ? +this.minNum+Number(Math.floor(Math.random()*(maxNum-this.minNum))) : y;
 
                     switch(this.sign) {
                         case 'addition':
                             sign = "+";
-                            break
+                            break;
                         case 'subtraction':
                             sign = "-";
-                            break
+                            break;
                         case 'division':
                             sign = "÷";
-                            break
+                            break;
                         case 'multiplication':
                             sign = "x";
-                            break
+                            break;
                         default:
                             sign = Math.random() < .5 ? "-" : "+";
                             break
@@ -157,12 +166,42 @@
 
                     if (x < y && sign === "-") {
                         example = y + " " + sign + " " + x + " = ";
+                    } else if (this.sign === "division") {
+                        if (y === 0) {
+                            y += Math.floor(Math.random()*(+divider+1));
+                            y = y < this.minNum ? +this.minNum+Number(Math.floor(Math.random()*(maxNum-this.minNum))) : y;
+                        }
+                        if (x === 0) {
+                            x += Number(Math.floor(Math.random()*+maxNum+1));
+                        }
+                        console.log("x:", x);
+                        console.log("y:", y);
+
+                        if (x < y) {
+                            let temp = x;
+                            x = y;
+                            y = temp;
+                        }
+                        if (x % y !== 0) {
+                            // if (Math.random() < .5) {
+                            while(x % y != 0) {
+                                x++
+                            }
+                            // } else {
+                            //     while(x % y != 0 && y < +this.divider) {
+                            //         y++
+                            //     }
+                            // }
+                            // console.log(x, y)
+                        }
+                        example = x + " " + sign + " " + y + " = ";
+
                     } else {
                         example = x + " " + sign + " " + y + " = ";
                     }
                     this.list.push(example);
                 }
-                console.log(this.list);
+                console.log(this);
             }
         }
     })

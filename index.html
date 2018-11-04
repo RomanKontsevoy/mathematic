@@ -67,6 +67,16 @@
         font-size: 17px;
         font-weight: 700;
     }
+
+    .total {
+        margin-top: 20px;
+        font-size: 20px;
+    }
+
+    .total span {
+        color: red;
+        font-size: 24px;
+    }
 </style>
 
 <div id="app">
@@ -105,6 +115,9 @@
             <div class="btn-wrap">
                 <button class="ok" @click.prevent="genetate">Сгенерировать</button>
                 <button class="clear" @click.prevent=" list = [] ">Очистить</button>
+            </div>
+            <div class="total">
+                Всего <span>{{list.length}}</span> примеров
             </div>
         </form>
 
